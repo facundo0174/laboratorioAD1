@@ -6,7 +6,7 @@ class DataSetCSV(DataSet):
     def __init__(self, source):
         super.__init__(source)
 
-    def dataCharger(self):
+    def dataCharge(self):
         try:
             if self.extDevolution(self.source)==".csv":#comprobamos que solo se pueda utilizar con .csv
                 df=pd.read_csv(self.source)
@@ -18,3 +18,11 @@ class DataSetCSV(DataSet):
                 raise(ValueError("error, el archivo no es un .csv"))
         except Exception as e:
             print(f"error de carga csv{e}")
+    
+    def dfInspect(self):#inicializamos temporalmente un df para muestreo 
+        try:
+            if self.extDevolution(self.source)==".csv":#comprobamos que solo se pueda utilizar con .csv
+                df=pd.read_csv(self.source)
+                self.dfShowInfo(df)
+        except Exception as e:
+            print(f"error al inspeccionar el dataframe, {e}")

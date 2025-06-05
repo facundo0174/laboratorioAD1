@@ -1,15 +1,11 @@
 import pandas as pd
 from domain.Dataset import DataSet
 import requests
-import json
+
 
 class DataSet_API(DataSet):
     def __init__(self, source):
         super().__init__(source)
-
-    def show_api(self,dfjson):
-        print(json.dumps(dfjson, indent=4, ensure_ascii=False))
-        #mostramos la forma de la api para observar y razonar como aplanar los datos
 
     def dataNormalize(self, df, record_path=None, meta=None, meta_prefix=None, sep='_'):
         """
@@ -48,11 +44,10 @@ class DataSet_API(DataSet):
     def dataTransformation(self):
         self.data=self.data.drop_duplicates()
     #https://apis.datos.gob.ar/georef/api/provincias
-    def dataCharger(self):
+    def dataCharge(self):
         try:
             response=requests.get(self.source)
             if response.status_code==200:
-                self.show_api(df)##muestra  la api para razonar el aplanamiento de datos
                 df=response.json()
                 df=self.stringNormalizer(df)
                 df=self.dataNormalize(df,"provincias")
@@ -64,3 +59,14 @@ class DataSet_API(DataSet):
                 print("error de respuesta en la api")
         except Exception as e:
             print(f"error de carga de api{e}")
+            
+    def dfInspect(self):#inicializamos temporalmente un df para muestreo 
+        try:
+            response=requests.get(self.source)
+            if response.status_code==200:
+                df=response.json()
+                self.dfShowInfo(df)
+            else:
+                print("error de respuesta en la api")
+        except Exception as e:
+            print(f"error al inspeccionar el dataframe, {e}")

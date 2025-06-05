@@ -6,7 +6,7 @@ class DataSetEXEL(DataSet):
     def __init__(self, source):
         super().__init__(source)
 
-    def dataCharger(self):
+    def dataCharge(self):
         try:
             if self.extDevolution()==".xlsx" | self.extDevolution() == ".xls":
                 df=pd.read_excel(self.source)
@@ -18,4 +18,11 @@ class DataSetEXEL(DataSet):
                 raise ValueError("error extencion no admitible, solo exels")
         except Exception as e:
             print(f"error en cargar exel, {e}")
-    
+            
+    def dfInspect(self):#inicializamos temporalmente un df para muestreo 
+        try:
+            if self.extDevolution()==".xlsx" | self.extDevolution() == ".xls":
+                df=pd.read_excel(self.source)
+                self.dfShowInfo(df)
+        except Exception as e:
+            print(f"error al inspeccionar el dataframe, {e}")
