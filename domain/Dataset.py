@@ -6,7 +6,6 @@ class DataSet(ABC):
     def __init__(self,data,source):
         self.__data=None
         self.__source=source
-    
     @property
     def data(self):
         #getter y procesar
@@ -21,15 +20,15 @@ class DataSet(ABC):
             self.__data=df
         else:
             raise(ValueError("error, tipo esperado pandas en data frame"))
-    
     @abstractmethod
     def dataCharger(self):
         pass
-    
-    def extDevolution(self):
-        return (Path(self.source).suffix)
-
-    def dataValidation(self):
+    def extDevolution(self):#retorno de extencion del archivo
+        if (Path(self.source).suffix == ""):
+            raise ValueError("error el archivo no tiene extencion")
+        else:
+            return (Path(self.source).suffix)
+    def dataValidation(self):# validaciones de formato no aceptables
         errors=[]
         if self.data is None:
             errors.append("el dataframe esta vacio (none)")
@@ -47,7 +46,6 @@ class DataSet(ABC):
             return False
         else:
             return True
-        
     def dataTransformation(self):#solo para archivos planos es decir cualquier cosa menos API's
         if self.data is not None:
             self.data.columns = self.data.columns.str.lower().str.replace(" ","_")#modificamos nombres de las columnas
@@ -56,7 +54,6 @@ class DataSet(ABC):
             #ademas asi conservamos el tipo de datos de otras cosas que no sean strings
             for col in self.data.select_dtypes(include="object").columns:
                 self.data[col] = self.data[col].apply(lambda x: x.strip() if isinstance(x, str) else x)
-
     def dataInfo(self):
         print(self.data.describe())
 
