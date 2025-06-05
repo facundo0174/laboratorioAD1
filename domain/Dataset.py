@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
+import pandas as pd
 
 class DataSet(ABC):
     def __init__(self,data,source):
@@ -14,16 +15,19 @@ class DataSet(ABC):
     def source(self):
         return (self.__source) 
     @data.setter
-    def data(self, value):
+    def data(self, df):
         #validaciones de si datasetter es correcto segun x cosa
-        self.__data=value
+        if isinstance (df, pd.DataFrame):
+            self.__data=df
+        else:
+            raise(ValueError("error, tipo esperado pandas en data frame"))
     
     @abstractmethod
     def dataCharger(self):
         pass
     
     def extDevolution(self):
-        return (self.source.suffix)
+        return (Path(self.source).suffix)
 
     def dataValidation(self):
         errors=[]

@@ -15,6 +15,6 @@ class DataSetCSV(DataSet):
                     self.dataTransformation()
                     print("csv cargado exitosamente")
             else:
-                raise("error, el archivo no es un .csv")
+                raise(ValueError("error, el archivo no es un .csv"))
         except Exception as e:
             print(f"error de carga csv{e}")
