@@ -6,3 +6,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+infoweb
+infoweb.py
+infoweb.txt

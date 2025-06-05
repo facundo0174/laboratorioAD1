@@ -1,76 +1,66 @@
 import pandas as pd
 from domain.Dataset import DataSet
 import requests
+import json
 
 class DataSet_API(DataSet):
     def __init__(self, source):
         super().__init__(source)
 
-    def show_api(self):
-        pass
+    def show_api(self,dfjson):
+        print(json.dumps(dfjson, indent=4, ensure_ascii=False))
+        #mostramos la forma de la api para observar y razonar como aplanar los datos
 
-    def normalize_api(self):
-        pass
+    def dataNormalize(self, df, record_path=None, meta=None, meta_prefix=None, sep='_'):
+        """
+        encapsulamos el metodo normalize de pandas para manipularlo segun sea necesario debido
+        a la estructura cambiante de la api, la cual se debe razonar tabulizar correctamente
+        """
+        return pd.json_normalize(df,record_path=record_path,meta=meta,meta_prefix=meta_prefix,sep=sep)
 
-    def normalize_list_df(self):
-        pass
+    def stringNormalizer(self,json):
+        """
+        el stack guarda los elementos a analizar, donde el 
+        padre de la estuctura es el contenido del primer none, y el segundo sera la clave o indice
+        mientras que el 3cero sera el contenido
+        basicamente  se utiliza una pila de 3 elementos basicos, nomVarible, Posicion y valor para modificar y
+        normalizar los strings
+        el primer stack es la totalidad de anidamientos de la api, hasta que no se procese toda la informacion
+        no terminara
+        """
+        stack = [(None, None, json)]  
+        while stack:
+            padre, clave, valor = stack.pop()
+            if isinstance(valor, dict):
+                for k, v in valor.items():
+                    stack.append((valor, k, v))
+            elif isinstance(valor, list):
+                for i, item in enumerate(valor):
+                    stack.append((valor, i, item))
+            elif isinstance(valor, str):
+                normalizado = valor.strip().lower()
+                if isinstance(padre, dict):
+                    padre[clave] = normalizado
+                elif isinstance(padre, list):
+                    padre[clave] = normalizado
+        return json
 
     def transformar_datos(self):
-        #hay que hacer uno nuevo, ya que al ser anidados puede generar errores aplicar strip y quiero conservar los tipos de datos
-        pass
-
-
+        self.data=self.data.drop_duplicates()
+    #https://apis.datos.gob.ar/georef/api/provincias
     def cargar_datos(self):
         try:
-            pass
+            response=requests.get(self.source)
+            if response.status_code==200:
+                self.show_api(df)##muestra  la api para razonar el aplanamiento de datos
+                df=response.json()
+                df=self.stringNormalizer(df)
+                df=self.dataNormalize(df,"provincias")
+                self.data=df
+                if self.validar_datos():
+                    self.transformar_datos()
+                    print("carga exitosa de api")
+            else:
+                print("error de respuesta en la api")
         except Exception as e:
-            print(f"{e}")
-
-
-
-"""
-df = pd.json_normalize(data, record_path=['provincias', 'municipios'])
-print(df)
-usas record_path para recuperar 2 o mas diccionarios en datos,
-Salida esperada:
-id  nombre
-0  14001  Córdoba
-1  14002  Alta Gracia
-
-
-Inspecciona siempre la estructura del JSON: Antes de aplicar json_normalize(), utiliza json.dumps()
-con una indentación adecuada para visualizar la jerarquía de los datos.
-
-print(json.dumps(data, indent=4))
-
-ejemplo de ver mas de 1 jererquia es decir 2 diccionarios:
-
-data = {
-    "provincias": [
-        {
-            "id": "14",
-            "nombre": "Córdoba",
-            "municipios": [
-                {"id": "14001", "nombre": "Córdoba"},
-                {"id": "14002", "nombre": "Alta Gracia"}
-            ]
-        }
-    ]
-}
-
-# Aplanar los datos
-df = pd.json_normalize(
-    data['provincias'],
-    record_path=['municipios'],
-    meta=['id', 'nombre'],
-    meta_prefix='provincia_'
-)
-
-print(df)
-
-Salida esperada:
-
-id      nombre       provincia_id provincia_nombre
-14001  Córdoba           14          Córdoba
-14002  Alta Gracia       14          Córdoba
-"""
+            print(f"error de carga de api{e}")
