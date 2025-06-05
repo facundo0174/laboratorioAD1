@@ -38,17 +38,17 @@ class DataSet_API(DataSet):
                 for i, item in enumerate(valor):
                     stack.append((valor, i, item))
             elif isinstance(valor, str):
-                normalizado = valor.strip().lower()
+                texto = valor.strip().lower()
                 if isinstance(padre, dict):
-                    padre[clave] = normalizado
+                    padre[clave] = texto
                 elif isinstance(padre, list):
-                    padre[clave] = normalizado
+                    padre[clave] = texto
         return json
 
-    def transformar_datos(self):
+    def dataTransformation(self):
         self.data=self.data.drop_duplicates()
     #https://apis.datos.gob.ar/georef/api/provincias
-    def cargar_datos(self):
+    def dataCharger(self):
         try:
             response=requests.get(self.source)
             if response.status_code==200:
@@ -57,8 +57,8 @@ class DataSet_API(DataSet):
                 df=self.stringNormalizer(df)
                 df=self.dataNormalize(df,"provincias")
                 self.data=df
-                if self.validar_datos():
-                    self.transformar_datos()
+                if self.dataValidation():
+                    self.dataTransformation()
                     print("carga exitosa de api")
             else:
                 print("error de respuesta en la api")

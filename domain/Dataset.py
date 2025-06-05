@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 class DataSet(ABC):
     def __init__(self,data,source):
@@ -16,16 +17,20 @@ class DataSet(ABC):
     def data(self, value):
         #validaciones de si datasetter es correcto segun x cosa
         self.__data=value
+    
     @abstractmethod
-    def cargar_datos(self):
+    def dataCharger(self):
         pass
     
-    def validar_datos(self):
+    def extDevolution(self):
+        return (self.source.suffix)
+
+    def dataValidation(self):
         errors=[]
-        if self.data.empty:
-            errors.append("el dataframe esta vacio (empty)")
         if self.data is None:
             errors.append("el dataframe esta vacio (none)")
+        if self.data.empty:
+            errors.append("el dataframe esta vacio (empty)")
         if self.data.isnull().sum().sum()>0:
             errors.append("el dataframe posee valores nulos en su interior")
         if self.data.duplicated().sum()>0:
@@ -39,20 +44,14 @@ class DataSet(ABC):
         else:
             return True
         
-
-    
-    def transformar_datos(self):#solo para archivos planos es decir cualquier cosa menos API's
+    def dataTransformation(self):#solo para archivos planos es decir cualquier cosa menos API's
         if self.data is not None:
-            self.data.columns = self.data.column.str.lower().str.replace(" ","_")
-            self.data = self.data.drop_duplicates()
-            # para asegurar el tipo de dato de las columnas y evitar errores de metodos de objetos NO strings
+            self.data.columns = self.data.columns.str.lower().str.replace(" ","_")#modificamos nombres de las columnas
+            self.data = self.data.drop_duplicates()# eliminamos filas duplicadas realizando comparaciones entre filas/registros
+            # para asegurar el tipo de dato del contenidodde las columnas y evitar errores de metodos de objetos NO strings
             #ademas asi conservamos el tipo de datos de otras cosas que no sean strings
             for col in self.data.select_dtypes(include="object").columns:
-                if isinstance(self.data[col].iloc[0], str): 
-                    self.data[col] = self.data[col].astype(str).str.strip()
-                else:
-                    self.data[col] = self.data[col]            
-
+                self.data[col] = self.data[col].apply(lambda x: x.strip() if isinstance(x, str) else x)
 
     def dataInfo(self):
         print(self.data.describe())
