@@ -57,6 +57,7 @@ class DataSet(ABC):
             self.data = self.data.drop_duplicates()# eliminamos filas duplicadas realizando comparaciones entre filas/registros
             # para asegurar el tipo de dato del contenidodde las columnas y evitar errores de metodos de objetos NO strings
             #ademas asi conservamos el tipo de datos de otras cosas que no sean strings
+            
             for col in self.data.select_dtypes(include="object").columns:
                 self.data[col] = self.data[col].apply(lambda x: x.strip() if isinstance(x, str) else x)
     def dataInfo(self):#informacion estadistica basica del dataframe
