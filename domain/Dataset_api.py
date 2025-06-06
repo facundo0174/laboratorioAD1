@@ -43,7 +43,7 @@ class DataSet_API(DataSet):
 
     def dataTransformation(self):
         self.data=self.data.drop_duplicates()
-    #https://apis.datos.gob.ar/georef/api/provincias
+    
     def dataCharge(self):
         try:
             response=requests.get(self.source)
