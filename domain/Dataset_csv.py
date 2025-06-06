@@ -11,7 +11,7 @@ class DataSetCSV(DataSet):
     def dataCharge(self):
         try:
             if self.extDevolution()==".csv":#comprobamos que solo se pueda utilizar con .csv
-                df=pd.read_csv(self.source, encoding=self.getCodification(), sep=self.getSeparator(), quotechar='"',doublequote=False)
+                df=pd.read_csv(self.source, encoding=self.getCodification(), sep=self.getSeparator(), errors="replace")
                 self.data=df
                 if self.dataValidation():
                     self.dataTransformation()
@@ -36,6 +36,7 @@ class DataSetCSV(DataSet):
             d=file.read(50000)#limitamos la cantidad de lectura a 50kbytes
             r=chardet.detect(d)
             return r['encoding']
+    
     def getSeparator(self):# existen diferentes separadores de datos
         with open(self.source, 'r') as file:
             dialect = csv.Sniffer().sniff(file.read(1024))
