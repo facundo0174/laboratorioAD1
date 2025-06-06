@@ -4,7 +4,7 @@ import pandas as pd
 class DataSetCSV(DataSet):
 
     def __init__(self, source):
-        super.__init__(source)
+        super().__init__(source)
 
     def dataCharge(self):
         try:

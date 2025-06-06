@@ -27,6 +27,7 @@ class DataSet(ABC):
     @abstractmethod
     def dfInspect(self):#inspector del dataframe unico para cada tipo de archivo
         pass
+    
     def extDevolution(self):#retorno de extencion del archivo
         if (Path(self.source).suffix == ""):
             raise ValueError("error el archivo no tiene extencion")
