@@ -8,12 +8,14 @@ class DataSetEXEL(DataSet):
 
     def dataCharge(self):
         try:
-            if self.extDevolution()==".xlsx" | self.extDevolution() == ".xls":
+            if self.extDevolution()==".xlsx" or self.extDevolution() == ".xls":
                 df=pd.read_excel(self.source)
                 self.data=df
                 if self.dataValidation():
-                    self.dataValidation()
+                    self.dataTransformation()
                     print("exel cargado exitosamente")
+                else:
+                    print("exel cargado con circunstacias")
             else:
                 raise ValueError("error extencion no admitible, solo exels")
         except Exception as e:

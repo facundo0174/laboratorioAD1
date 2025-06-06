@@ -45,7 +45,7 @@ class DataSet(ABC):
             errors.append("el dataframe posee valores duplicados en su interior")
         
         if errors:
-            print("Los errores encontrados son los siguientes:\n")
+            print("Las validaciones detectaron las siguientes cirscunstancias:\n")
             for e in errors:
                 print(f"#{e}\n")
             return False
