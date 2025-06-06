@@ -4,7 +4,7 @@ import pandas as pd
 import json
 
 class DataSet(ABC):
-    def __init__(self,data,source):
+    def __init__(self,source):
         self.__data=None
         self.__source=source
     @property
@@ -76,10 +76,10 @@ class DataSet(ABC):
             print(df.dtypes)
             print("___###___")
             print("duplicados")
-            print(df.duplicates())
+            print(df.duplicated())
             print("___###___")
             print("total de duplicados")
-            print(df.duplicates().sum())
+            print(df.duplicated().sum())
             print("___###___")
             print("cantidad de nulos")
             print(df.isnull().sum())
