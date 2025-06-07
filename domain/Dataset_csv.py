@@ -1,7 +1,7 @@
 from domain.Dataset import DataSet
 import pandas as pd
-import chardet
-import csv
+import chardet #libreria para detectar formatos
+import csv #libreria de procesamiento de formalidades en csv
 
 class DataSetCSV(DataSet):
 
