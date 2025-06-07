@@ -9,4 +9,10 @@ por el archivo Dataset_api.py
 parcial leyendo 50kBytes primarios para no relentizar el proceso, asi como el tipo de elemento separador, ya que este puede variar
 - la carga en la base de datos no especifica tipos de datos en las columnas, realiza una carga parcial o plana del dataframe hecho por pandas
 - los archivos de pruebas fueron sacados de **[https://apis.datos.gob.ar/]**
+- el valor del **.env** utilizado en **/data** durante sus pruebas es el siguiente:
+  - DB_NAME=laboratorioad1
+  - DB_USER=root
+  - DB_PASSWORD=
+  - DB_HOST=localhost
+  - DB_PORT=3306 
 
