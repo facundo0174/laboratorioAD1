@@ -1,6 +1,6 @@
 #**Laboratorio 1 de Analisis de Datos**#
 
-##**Adquisicion de datos sobre distintos formatos de archivos**#
+##**Adquisicion de datos sobre distintos formatos de archivos**##
 
 Las pruebas de codigo se realizaron mediante el uso de **MySQL Workbench 8.0 CE** y **XAMPP Control Panel** para el deploit local
 **Algunas concideraciones**
